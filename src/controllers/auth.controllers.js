@@ -24,7 +24,7 @@ export const register = async(req, res)=>{
 
     } catch (e) {
         if(e.code == 11000)
-            res.status(400).json({ok: false, msg: `${Object.keys(e.keyValue)} ya se encuentra en uso`})
+            return res.status(400).json({ok: false, msg: `${Object.keys(e.keyValue)} ya se encuentra en uso`})
         
         res.status(500).json({ok: false, msg: "error interno del servidor"})
     }
@@ -65,8 +65,7 @@ export const login = async(req, res)=>{
 
 export const logout = async(req, res)=>{
     try {
-        res.clearCookie("token")
-        res.status(200).json({ok: true, msg: "has cerrado sesión"})
+        res.clearCookie("token").status(200).json({ok: true, msg: "has cerrado sesión"})
     } catch (e) {
         res.status(500).json({ok: false, msg: "error interno del servidor"})
     }
