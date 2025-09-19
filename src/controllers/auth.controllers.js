@@ -70,3 +70,17 @@ export const logout = async(req, res)=>{
         res.status(500).json({ok: false, msg: "error interno del servidor"})
     }
 }
+
+
+export const getProfile = async(req, res)=>{
+    
+    const user = req.userData
+    
+    try {
+        const profile = await userModel.findById(user._id, {profile: true, _id: false})
+
+        res.status(200).json({ok: true, data: profile})
+    } catch (error) {
+        res.status(500).json({ok: false, msg: "error interno del servidor"})
+    }
+}
