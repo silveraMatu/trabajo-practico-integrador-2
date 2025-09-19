@@ -25,10 +25,10 @@ export const userValidations = [
     body("profile")
         .optional()
         .isObject().withMessage("profile debe ser un objeto."),
-    body("profile.firsName")
-        .isString().withMessage("firsName debe ser un string")
+    body("profile.firstName")
+        .isString().withMessage("firstName debe ser un string")
         .trim()
-        .notEmpty().withMessage("firsName requerido")
+        .notEmpty().withMessage("firstName requerido")
         .isLength({min: 2, max: 50}),
     body("profile.lastName")
         .isString().withMessage("lastName debe ser un string")
@@ -47,5 +47,4 @@ export const userValidations = [
     body("profile.birthDate")
         .optional()
         .isDate().withMessage("birthDate debe tener un formato de fecha válido.")
-        .trim()
 ]
