@@ -81,6 +81,29 @@ export const getProfile = async(req, res)=>{
 
         res.status(200).json({ok: true, data: profile})
     } catch (error) {
-        res.status(500).json({ok: false, msg: "error interno del servidor"})
+        res.status(e.statusCode || 500 ).json({ok: false, msg: e.msg || "error interno del servidor"})
+    }
+}
+
+export const updateProfile = async(req, res)=>{
+    
+    const validatedData = matchedData(req)
+    const { userData }= req
+    
+    try {
+        const user = await userModel.findById(userData._id)
+
+        Object.keys(validatedData).forEach(key=>
+            {
+                user.profile[key] = validatedData[key]
+            })
+        
+        await user.save()
+
+        res.status(200).json({ok: true, msg: "profile actualizado", data: user.profile})
+
+    } catch (e) {
+        console.log(e);
+        res.status(e.statusCode || 500 ).json({ok: false, msg: e.msg || "error interno del servidor"})
     }
 }
