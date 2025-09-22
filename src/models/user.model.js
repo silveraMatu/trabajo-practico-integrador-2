@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { hashPassword } from "../helpers/bcrypt/bcrypt.helper.js";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -45,9 +46,44 @@ const userSchema = new mongoose.Schema({
         birthDate: {
             type: Date
         }
+    },
+    deletedAt:{
+        type: Date,
+        default: null
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true}
 })
 
-export const userModel = mongoose.model("User", userSchema)
+
+userSchema.virtual("articles", {
+    ref: "Article",
+    localField: "_id",
+    foreignField: "author"
+})
+
+
+//metodo de eliminación lógica
+userSchema.methods.softDelete = async function softDelete() {
+    return await this.updateOne({deletedAt: Date.now()})
+}
+
+
+//middleware para el hash de password
+
+userSchema.pre("save", {document: true}, async function(next){
+    this.password = await hashPassword(this.password)
+    next()
+})
+
+//middleware para evitar q los finders me traigan usuarios eliminados logicamente
+
+userSchema.pre(/^find/, function(next){
+    
+    if(this.getFilter().deletedAt === undefined){
+        this.where({deletedAt: null})
+    }
+    next()
+})
+export const UserModel = mongoose.model("User", userSchema)

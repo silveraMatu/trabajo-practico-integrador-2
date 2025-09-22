@@ -31,4 +31,10 @@ const articleSchema = new mongoose.Schema({
     timestamps: true
 })
 
+articleSchema.virtual("comments", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "article"
+})
+
 export const ArticleModel = mongoose.model("Article", articleSchema)

@@ -1,5 +1,5 @@
 import { matchedData } from "express-validator";
-import { userModel } from "../models/user.model.js";
+import { UserModel } from "../models/user.model.js";
 import { comparePassword, hashPassword } from "../helpers/bcrypt/bcrypt.helper.js";
 import { generateToken } from "../helpers/jwt/generateToken.helper.js";
 
@@ -9,11 +9,7 @@ export const register = async(req, res)=>{
     
     try {
 
-        //hasheo de password
-        const hashedPassword = await hashPassword(validatedData.password)
-        validatedData.password = hashedPassword
-
-        const newUser = new userModel(validatedData)
+        const newUser = new UserModel(validatedData)
 
         await newUser.save()
 
@@ -35,7 +31,7 @@ export const login = async(req, res)=>{
     const validatedData = matchedData(req)
     
     try {
-        const user = await userModel.findOne({username: validatedData.username})
+        const user = await UserModel.findOne({username: validatedData.username})
         if(!user)
             res.status(404).json({ok: false, msg: "usuario no encontrado."})
 
@@ -77,7 +73,7 @@ export const getProfile = async(req, res)=>{
     const user = req.userData
     
     try {
-        const profile = await userModel.findById(user._id, {profile: true, _id: false})
+        const profile = await UserModel.findById(user._id, {profile: true, _id: false})
 
         res.status(200).json({ok: true, data: profile})
     } catch (error) {
@@ -91,7 +87,7 @@ export const updateProfile = async(req, res)=>{
     const { userData }= req
     
     try {
-        const user = await userModel.findById(userData._id)
+        const user = await UserModel.findById(userData._id)
 
         Object.keys(validatedData).forEach(key=>
             {
@@ -103,7 +99,6 @@ export const updateProfile = async(req, res)=>{
         res.status(200).json({ok: true, msg: "profile actualizado", data: user.profile})
 
     } catch (e) {
-        console.log(e);
         res.status(e.statusCode || 500 ).json({ok: false, msg: e.msg || "error interno del servidor"})
     }
 }
