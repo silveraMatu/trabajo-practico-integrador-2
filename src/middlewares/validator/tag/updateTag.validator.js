@@ -1,10 +1,10 @@
 import { body } from "express-validator";
 
-export const createTagValidation = [
+export const updateTagValidation = [
     body("name")
+        .optional()
         .isString().withMessage("nombre debe ser un string")
         .trim()
-        .notEmpty().withMessage("name es requerido")
         .isLength({min: 2, max: 30})
         .custom((value)=>{
             const regex = /^\S+$/

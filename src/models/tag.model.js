@@ -16,4 +16,10 @@ const tagSchema = new mongoose.Schema({
     timestamps: true
 })
 
+tagSchema.virtual("articles", {
+    ref: "Article",
+    localField: "_id",
+    foreignField: "tags"
+})
+
 export const TagModel = mongoose.model("Tag", tagSchema)

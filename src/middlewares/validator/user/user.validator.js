@@ -29,12 +29,28 @@ export const userValidations = [
         .isString().withMessage("firstName debe ser un string")
         .trim()
         .notEmpty().withMessage("firstName requerido")
-        .isLength({min: 2, max: 50}),
+        .isLength({min: 2, max: 50})
+        .custom((value)=>{
+            const regex = /.*(\W|\d).*/
+
+            if(regex.test(value))
+                throw new Error("firstName solo puede contener letras.");
+            
+            return true   
+        }),
     body("profile.lastName")
         .isString().withMessage("lastName debe ser un string")
         .trim()
         .notEmpty().withMessage("lastName requerido")
-        .isLength({min: 2, max: 50}),
+        .isLength({min: 2, max: 50})
+        .custom((value)=>{
+            const regex = /.*(\W|\d).*/
+
+            if(regex.test(value))
+                throw new Error("lastName solo puede contener letras.");
+            
+            return true   
+        }),
     body("profile.biography")
         .optional()
         .isString().withMessage("biography debe ser un string")

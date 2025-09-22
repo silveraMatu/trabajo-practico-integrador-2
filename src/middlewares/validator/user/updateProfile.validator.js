@@ -1,18 +1,34 @@
 import { body } from "express-validator";
 
 export const updateProfileValidations = [
- body("firstName")
+    body("firstName")
         .optional()
         .isString().withMessage("firstName debe ser un string")
         .trim()
         .notEmpty().withMessage("firstName requerido")
-        .isLength({min: 2, max: 50}),
-        body("lastName")
+        .isLength({min: 2, max: 50})
+        .custom((value)=>{
+            const regex = /.*(\W|\d).*/
+
+            if(regex.test(value))
+                throw new Error("firstName solo puede contener letras.");
+            
+            return true   
+        }),
+    body("lastName")
         .optional()
         .isString().withMessage("lastName debe ser un string")
         .trim()
         .notEmpty().withMessage("lastName requerido")
-        .isLength({min: 2, max: 50}),
+        .isLength({min: 2, max: 50})
+        .custom((value)=>{
+            const regex = /.*(\W|\d).*/
+
+            if(regex.test(value))
+                throw new Error("lastName solo puede contener letras.");
+            
+            return true   
+        }),
     body("biography")
         .optional()
         .isString().withMessage("biography debe ser un string")
