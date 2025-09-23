@@ -63,7 +63,7 @@ export const updateComment = async(req, res)=>{
     const {content} = matchedData(req)
     
     try {
-        const updatedComment = await comment.updateOne({content})
+        const updatedComment = await comment.updateOne({content}, {new: true})
 
         res.status(200).json({ok: false, msg: "comentario actualizado", data: updatedComment})
     } catch (error) {

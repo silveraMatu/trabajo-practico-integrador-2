@@ -50,7 +50,7 @@ export const ownerOrAdminMiddleware = async(req, res, next)=>{
     if(!resource)
         return res.status(404).json({ok: false, msg: `${key.slice(0, -1)} no ha sido encontrado.}`})
 
-    if(resource.author !== _id && role !== "admin")
+    if(!resource.author.equals(_id) && role !== "admin")
         return res.status(403).json({ok: false, msg: "solo el autor o un admin puede realizar esta accion"})
 
     req[key.slice(0, -1)] = resource //esto puede ser req.article o req.comment
