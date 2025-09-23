@@ -3,16 +3,18 @@ import mongoose from "mongoose";
 const articleSchema = new mongoose.Schema({
     title: {
         type: String,
+        required: true,
         minLength: 3,
         maxLength: 200
     },
     content: {
         type: String,
+        required: true,
         minLength: 50
     },
     excerpt: {
         type: String,
-        manLength: 500
+        maxLength: 500
     },
     status: {
         type: String,
@@ -21,6 +23,7 @@ const articleSchema = new mongoose.Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: "User"
     },
     tags: {
@@ -28,7 +31,8 @@ const articleSchema = new mongoose.Schema({
         ref: "Tag"
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true}
 })
 
 articleSchema.virtual("comments", {

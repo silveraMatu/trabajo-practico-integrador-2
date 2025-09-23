@@ -13,7 +13,8 @@ const tagSchema = new mongoose.Schema({
         maxLength: 200
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true}
 })
 
 tagSchema.virtual("articles", {
