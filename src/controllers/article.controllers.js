@@ -42,7 +42,7 @@ export const getArticleById = async(req, res)=>{
    
     try {
         const article = await ArticleModel.findById(id, {title: 1, author: 1, tags: 1})
-            .populate("author", "username").populate("tags", "name")
+            .populate("author", "username").populate("tags", "-_id name").populate("comments", " -_id author content")
 
         if(!article)
             return res.status(404).json({ok: false, msg: "no se encontro el article"})
