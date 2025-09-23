@@ -33,7 +33,7 @@ export const login = async(req, res)=>{
     try {
         const user = await UserModel.findOne({username: validatedData.username})
         if(!user)
-            res.status(404).json({ok: false, msg: "usuario no encontrado."})
+            return res.status(404).json({ok: false, msg: "usuario no encontrado."})
 
         //compara la password, si no pasa se va al catch
         await comparePassword(validatedData.password, user.password)

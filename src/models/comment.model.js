@@ -23,6 +23,7 @@ const commentSchema = new mongoose.Schema({
         ref: "Article"
     },
 }, {
+    versionKey: false,
     timestamps: true
 })
 

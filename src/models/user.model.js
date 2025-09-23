@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { hashPassword } from "../helpers/bcrypt/bcrypt.helper.js";
+import { ArticleModel } from "./article.model.js";
+import { CommentModel } from "./comment.model.js";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -52,6 +54,7 @@ const userSchema = new mongoose.Schema({
         default: null
     }
 }, {
+    versionKey: false,
     timestamps: true,
     toJSON: {virtuals: true}
 })
@@ -84,6 +87,15 @@ userSchema.pre(/^find/, function(next){
     if(this.getFilter().deletedAt === undefined){
         this.where({deletedAt: null})
     }
+    next()
+})
+
+userSchema.pre("updateOne", {document: true}, async function(next){
+    
+    await ArticleModel.deleteMany({author: this._id})
+
+    await CommentModel.deleteMany({author: this._id})
+
     next()
 })
 export const UserModel = mongoose.model("User", userSchema)

@@ -1,6 +1,4 @@
 import { UserModel } from "../models/user.model.js"; 
-import { ArticleModel } from "../models/article.model.js"; //importo article pq sino mongoose se pone quisquilloso
-import { CommentModel } from "../models/comment.model.js"; //la misma cosa
 import { matchedData } from "express-validator";
 
 export const getAllUsersWithArticles = async(req, res)=>{

@@ -15,7 +15,7 @@ export const userValidations = [
         .isString().withMessage("password debe ser un string")
         .trim()
         .notEmpty().withMessage("password requerida")
-        .isStrongPassword({minLength: 6, minSymbols: 0, minUppercase: 0}),
+        .isStrongPassword({minSymbols: 0}),
     body("role")
         .optional()
         .isString().withMessage("role debe ser un string.")

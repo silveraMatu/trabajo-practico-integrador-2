@@ -83,4 +83,3 @@ export const deleteComment = async(req, res)=>{
         res.status(500).json({ok: false, msg: "error interno del servidor"})
     }
 }
-
