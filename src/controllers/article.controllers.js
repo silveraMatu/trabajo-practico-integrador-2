@@ -1,6 +1,7 @@
 import { matchedData } from "express-validator";
 import { ArticleModel } from "../models/article.model.js";
 import { UserModel } from "../models/user.model.js";
+import { TagModel } from "../models/tag.model.js";
 
 export const createArticle = async(req, res)=>{
     
@@ -10,7 +11,7 @@ export const createArticle = async(req, res)=>{
         const userExist = await UserModel.findById(validatedData.author)
         if(!userExist)
             return res.status(404).json({ok: false, msg: "ese usuario no existe"})
-         
+
         const newArticle = new ArticleModel(validatedData)
 
         const savedArticle = await newArticle.save()
@@ -70,21 +71,48 @@ export const getMyArticles = async(req, res)=>{
     }
 }
 
-export const updateArticle = async(req, res)=>{
-    const {article} = req //enviamos article desde la validacion de ownerOrAdmin para evitar consultar dos veces
-    const validatedData = matchedData(req)
-    
-    try {
-        Object.keys(validatedData).forEach(key=>{
-            article[key] = validatedData[key]
-        })
+export const updateArticle = async (req, res) => {
+  const { article } = req
+  const validatedData = matchedData(req)
 
-        const savedArticle = await article.save()
-        res.status(200).json({ok: true, msg: "articulo actualizado", data: savedArticle})
-    } catch (error) {
-        res.status(500).json({ok: false, msg: "error interno del servidor"})
+  try {
+    for (const key of Object.keys(validatedData)){
+
+      if (key === "tags") {
+        
+        const validatedTags = []
+        
+        for (const tag of validatedData.tags) {
+        
+            const exist = await TagModel.findById(tag)
+            if (!exist) {
+                return res.status(404).json({
+                    ok: false,
+                    msg: `tag ${tag} no encontrado`
+                })
+            }
+            validatedTags.push(tag)
+        }
+
+        article.tags = validatedTags
+
+      } else {
+        article[key] = validatedData[key]
+      }
     }
+
+    const savedArticle = await article.save()
+    res.status(200).json({
+      ok: true,
+      msg: "articulo actualizado",
+      data: savedArticle
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ ok: false, msg: "error interno del servidor" })
+  }
 }
+
 
 export const deleteArticle = async(req, res)=>{
     

@@ -6,6 +6,7 @@ import { CommentModel } from "../../../models/comment.model.js"
 export const ownerOrAdminMiddleware = async(req, res, next)=>{
     const {_id, role} = req.userData
     const {id} = req.params
+    const {articleId} = req.params
 
     // if(req.path.startsWith("/articles")){
     //     const article = await ArticleModel.findOne({_id: id})
@@ -36,7 +37,14 @@ export const ownerOrAdminMiddleware = async(req, res, next)=>{
     const key = req.path.split("/")[1] //key tomara articles o comments dependiendo como se pase en el endpoint
     const model = models[key]
 
-    const resource = await model.findById(id) //esto hace una query el modelo de article o comment dependiendo del endpoint
+    let resource
+    
+    if(articleId){
+        resource = await model.findById(articleId) //por si en vez de id me mandan articleId
+
+    }else{
+        resource = await model.findById(id) //esto hace una query el modelo de article o comment dependiendo del endpoint
+    }
 
     if(!resource)
         return res.status(404).json({ok: false, msg: `${key.slice(0, -1)} no ha sido encontrado.}`})
