@@ -9,9 +9,8 @@ import { paramValidator } from "../middlewares/param.validator.js";
 export const userRouter = Router()
 
 userRouter.use(authMiddleware)
-userRouter.use(adminMiddleware)
 
-userRouter.get("/users", getAllUsersWithArticles )
-userRouter.get("/users/:id",paramValidator, applyValidations, getUserWithArticles )
-userRouter.put("/users/:id", paramValidator, updateUserValidations, applyValidations, updateUser )
-userRouter.delete("/users/:id", paramValidator, applyValidations, deleteUser )
+userRouter.get("/users",adminMiddleware, getAllUsersWithArticles )
+userRouter.get("/users/:id",paramValidator, applyValidations, adminMiddleware, getUserWithArticles )
+userRouter.put("/users/:id", paramValidator, updateUserValidations, adminMiddleware, applyValidations, updateUser )
+userRouter.delete("/users/:id", paramValidator, applyValidations,adminMiddleware, deleteUser )
