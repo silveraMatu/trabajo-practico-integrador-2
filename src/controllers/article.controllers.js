@@ -120,7 +120,6 @@ export const deleteArticle = async(req, res)=>{
     
     try {
 
-        //TODO. Agregarle eliminacion en cascada a los comentarios.
         await article.deleteOne()
         res.status(204).end()
     } catch (error) {

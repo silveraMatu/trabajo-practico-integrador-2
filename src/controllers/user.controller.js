@@ -3,7 +3,6 @@ import { matchedData } from "express-validator";
 
 export const getAllUsersWithArticles = async(req, res)=>{
     try {
-        //TO-DO. mas adelante validar que no este eliminado logicamente.
        const users = await UserModel.find({}, {username: 1, articles: 1}).populate("articles", "title status")
 
        if(!users.length)
