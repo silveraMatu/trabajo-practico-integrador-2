@@ -1,3 +1,4 @@
+import { matchedData, param } from "express-validator"
 import { ArticleModel } from "../../../models/article.model.js"
 import { CommentModel } from "../../../models/comment.model.js"
 
@@ -5,8 +6,8 @@ import { CommentModel } from "../../../models/comment.model.js"
 //midleware tanto para article como para comment
 export const ownerOrAdminMiddleware = async(req, res, next)=>{
     const {_id, role} = req.userData
-    const {id} = req.params
-    const {articleId} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
+    const {articleId} = matchedData(req, {locations: ["params"]})
 
     // if(req.path.startsWith("/articles")){
     //     const article = await ArticleModel.findOne({_id: id})

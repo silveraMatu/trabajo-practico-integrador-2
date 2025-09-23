@@ -17,7 +17,7 @@ export const getAllUsersWithArticles = async(req, res)=>{
 
 export const getUserWithArticles = async(req, res)=>{
     
-    const {id} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
     
     try {
         
@@ -44,7 +44,7 @@ export const getUserWithArticles = async(req, res)=>{
 export const updateUser = async(req, res)=>{
     
     const validatedData = matchedData(req)
-    const {id} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
     
     try {
 
@@ -78,7 +78,7 @@ export const updateUser = async(req, res)=>{
 
 export const deleteUser = async(req, res)=>{
     
-    const {id} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
     
     try {
         const user = await UserModel.findById(id)

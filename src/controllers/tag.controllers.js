@@ -32,7 +32,7 @@ export const getAllTags = async(req, res)=>{
 
 export const getTagById = async(req, res)=>{
     
-    const {id} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
     
     try {
         const tag = await TagModel.findById(id).populate(
@@ -52,7 +52,7 @@ export const getTagById = async(req, res)=>{
 
 export const updateTag = async(req, res)=>{
     
-    const {id} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
     const validatedData = matchedData(req)
     
     try {
@@ -77,7 +77,7 @@ export const updateTag = async(req, res)=>{
 
 export const deleteTag = async(req, res)=>{
     
-    const {id} = req.params
+    const {id} = matchedData(req, {locations: ["params"]})
     
     try {
         const deleted = await TagModel.deleteOne({_id: id})

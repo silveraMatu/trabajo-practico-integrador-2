@@ -5,6 +5,7 @@ import { applyValidations } from "../middlewares/validator/applyValidations.js";
 import { authMiddleware } from "../middlewares/validator/jwt/auth.middleware.js";
 import { adminMiddleware } from "../middlewares/validator/authorization/adminMiddleware.js";
 import { updateTagValidation } from "../middlewares/validator/tag/updateTag.validator.js";
+import { paramValidator } from "../middlewares/param.validator.js";
 
 export const tagRouter = Router()
 
@@ -12,6 +13,6 @@ tagRouter.use(authMiddleware)
 
 tagRouter.post("/tags", adminMiddleware, createTagValidation, applyValidations, createTag)
 tagRouter.get("/tags", getAllTags)
-tagRouter.get("/tags/:id", getTagById)
-tagRouter.put("/tags/:id", adminMiddleware, updateTagValidation, applyValidations, updateTag)
-tagRouter.delete("/tags/:id", adminMiddleware, deleteTag)
+tagRouter.get("/tags/:id",paramValidator, applyValidations, getTagById)
+tagRouter.put("/tags/:id", paramValidator, applyValidations, adminMiddleware, updateTagValidation, applyValidations, updateTag)
+tagRouter.delete("/tags/:id", paramValidator, applyValidations, adminMiddleware, deleteTag)

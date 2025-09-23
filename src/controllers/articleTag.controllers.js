@@ -1,8 +1,9 @@
+import { matchedData } from "express-validator";
 import { TagModel } from "../models/tag.model.js";
 
 export const addTagAnArticle = async(req, res)=>{
     const {article} = req
-    const {tagId} = req.params
+    const {tagId} = matchedData(req)
     try {
         const tagExist = await TagModel.findById(tagId)
         if(!tagExist)
@@ -24,7 +25,7 @@ export const addTagAnArticle = async(req, res)=>{
 
 export const deleteTagOfArticle = async(req, res)=>{
     const {article} = req
-    const {tagId} = req.params
+    const {tagId} = matchedData(req)
     try {
         const tagExist = await TagModel.findById(tagId)
         if(!tagExist)

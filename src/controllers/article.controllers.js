@@ -38,7 +38,7 @@ export const getAllArticles = async(req, res)=>{
 
 export const getArticleById = async(req, res)=>{
    
-   const {id} = req.params
+   const {id} = matchedData(req)
    
     try {
         const article = await ArticleModel.findById(id, {title: 1, author: 1, tags: 1})

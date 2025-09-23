@@ -27,7 +27,7 @@ export const createComment = async(req, res)=>{
 
 export const getAllCommentsOfArticle = async(req, res)=>{
     
-    const {articleId} = req.params
+    const {articleId} = matchedData(req)
     
     try {
         const comments = await CommentModel.find({article: articleId}, {content: 1, author: 1}).populate("author", "username")
