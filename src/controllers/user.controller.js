@@ -71,6 +71,9 @@ export const updateUser = async(req, res)=>{
 
         res.status(200).json({ok: true, msg: "usuario actualizado", data: updatedUser})
     } catch (e) {
+        if(e.code == 11000)
+            return res.status(400).json({ok: false, msg: `${Object.keys(e.keyValue)} ya se encuentra en uso`})
+        
         res.status(500).json({ok: false, msg: "error interno del servidor"})
     }
 }
