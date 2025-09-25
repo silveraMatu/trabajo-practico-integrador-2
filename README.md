@@ -179,10 +179,115 @@ response:
 }
 ```
 
+
+##### Para los controladores de `User`
+
+`GET | /api/users` → Traer todos los usuarios con sus artículos
+
+response: 
+```json
+{
+	"ok": true,
+	"data": [
+		{
+			"_id": "68d534b35de0e4c7b8db9d27",
+			"username": "domadorDePatis2025",
+			"articles": [
+				{
+					"_id": "68d5357f5de0e4c7b8db9d33",
+					"title": "Como hacer un buen readme en 5 pasos",
+					"status": "published",
+					"author": "68d534b35de0e4c7b8db9d27",
+					"id": "68d5357f5de0e4c7b8db9d33"
+				}
+			],
+			"id": "68d534b35de0e4c7b8db9d27"
+		},
+		{
+			"_id": "68d534f15de0e4c7b8db9d2c",
+			"username": "hOLA1234",
+			"articles": [],
+			"id": "68d534f15de0e4c7b8db9d2c"
+		}
+	]
+}
+```
+`GET | /api/users/68d5373e6d971e266f967177` → Traer usuario específico con artículos y comentarios
+
+response:
+```json
+{
+	"ok": true,
+	"data": {
+		"_id": "68d5373e6d971e266f967177",
+		"username": "domadorDePatis2025",
+		"articles": [
+			{
+				"_id": "68d5357f5de0e4c7b8db9d33",
+				"title": "Como hacer un buen readme en 5 pasos",
+				"status": "published",
+				"author": "68d534b35de0e4c7b8db9d27",
+				"comments": [
+					{
+						"_id": "68d536075de0e4c7b8db9d3b",
+						"content": "Buen post. Ahora qur ya lo vi borralo",
+						"author": "68d534b35de0e4c7b8db9d27",
+						"article": "68d5357f5de0e4c7b8db9d33"
+					}
+				],
+				"id": "68d5357f5de0e4c7b8db9d33"
+			}
+		],
+		"id": "68d534b35de0e4c7b8db9d27"
+	}
+}
+```
+
+`PUT | /api/users/68d5373e6d971e266f967177` → Actualizar usuario
+En el body se puede pasar cualquier campo que pertenezca al modelo de usuario
+
+body:
+
+```json
+{
+    "username": "matusilvera808",
+    "email": "domadordepatis2026@gmail.com",
+    "password": "Incorrect4",
+		"profile":{
+    	"biography": "No me avisaron que hoy habia examen man actualizado"
+		}
+}
+```
+
+response:
+
+```json
+{
+	"ok": true,
+	"msg": "usuario actualizado",
+	"data": {
+		"profile": {
+			"firstName": "Matias",
+			"lastName": "Silvera",
+			"biography": "No me avisaron que hoy habia examen man actualizado",
+			"avatarUrl": "www.avatarMatias.com"
+		},
+		"_id": "68d5373e6d971e266f967177",
+		"username": "matusilvera808",
+		"email": "domadordepatis2026@gmail.com",
+		"role": "admin",
+		"deletedAt": null,
+		"createdAt": "2025-09-25T12:36:14.359Z",
+		"updatedAt": "2025-09-25T12:36:23.305Z"
+	}
+}
+```
+`DELETE | /api/users/68d5373e6d971e266f967177` → Eliminar usuario
+response: Al ser 204 (no content), manda una respuesta vacía.
+
 ##### Para los controladores de `Tag`
 
-`POST | /api/tags` → Crear etiqueta
-
+`POST | /api/tags` → crear Tag
 **Body:**
 ```json
 {
@@ -276,3 +381,225 @@ response:
 response: Al ser 204 (no content), manda una respuesta vacía.
 
 ##### Para los controladores de `Article`
+
+`POST | /api/articles` --> Crear artículo
+
+body:
+```json
+{
+	"title": "Como hacer un buen readme en 5 pasos",
+	"content": "Para poder hacer un buen readme en solamente 5 pasos debes seguir las siguintes indicaciones. Estas son",
+	"author": "68d5373e6d971e266f967177" <-- id del autor del articulo
+}
+```
+
+response:
+```json
+{
+	"ok": true,
+	"msg": "articulo creado",
+	"data": {
+		"title": "Como hacer un buen readme en 5 pasos",
+		"content": "Para poder hacer un buen readme en solamente 5 pasos debes seguir las siguintes indicaciones. Estas son",
+		"status": "published",
+		"author": "68d5373e6d971e266f967177",
+		"tags": [],
+		"_id": "68d5385d6d971e266f96717c",
+		"createdAt": "2025-09-25T12:41:01.422Z",
+		"updatedAt": "2025-09-25T12:41:01.422Z",
+		"id": "68d5385d6d971e266f96717c"
+	}
+}
+```
+
+
+
+`GET | /api/articles` --> Listar artículos creados con author y tags
+
+response:
+```json
+{
+	"ok": true,
+	"data": [
+		{
+			"_id": "68d5385d6d971e266f96717c",
+			"title": "Como hacer un buen readme en 5 pasos",
+			"author": {
+				"_id": "68d5373e6d971e266f967177",
+				"username": "matusilvera808",
+				"id": "68d5373e6d971e266f967177"
+			},
+			"tags": [],
+			"id": "68d5385d6d971e266f96717c"
+		}
+	]
+}
+```
+`GET | /api/articles/my` --> Listar artículos del usuario autenticado
+
+response:
+```json
+{
+	"ok": true,
+	"data": [
+		{
+			"_id": "68d539f26d971e266f96718f",
+			"title": "Como hacer un buen readme en 5 pasos",
+			"id": "68d539f26d971e266f96718f"
+		},
+		{
+			"_id": "68d539f36d971e266f967192",
+			"title": "Como hacer un buen readme en 5 pasos",
+			"id": "68d539f36d971e266f967192"
+		},
+		{
+			"_id": "68d539f46d971e266f967195",
+			"title": "Como hacer un buen readme en 5 pasos",
+			"id": "68d539f46d971e266f967195"
+		}
+	]
+}
+```
+`GET | /api/articles/68d539f46d971e266f967195` --> Obtener articulos por id con populate completo
+
+response:
+
+```json
+{
+	"ok": true,
+	"data": {
+		"_id": "68d539f46d971e266f967195",
+		"title": "Como hacer un buen readme en 5 pasos",
+		"author": {
+			"_id": "68d539dc6d971e266f967184",
+			"username": "hOLA1234",
+			"id": "68d539dc6d971e266f967184"
+		},
+		"tags": [], <-- si tuviera tags aca aparecerian todos.
+		"comments": [], <-- si tuviera comentarios aparecerian todos los comentarios
+		"id": "68d539f46d971e266f967195"
+	}
+}
+```
+`PUT | /api/articles/68d539f46d971e266f967195` --> Actualizar articulo
+body: Puede ir cualquier campo que corresponda al modelo de Article, excepto author
+```json
+{
+	"title": "mi primer blog chabales",
+	"content": "mi primer blog chabales. El dia hablaremos de como conseguir diamantes de manera sencilla en minecraft"
+}
+```
+
+response:
+```json
+{
+	"ok": true,
+	"msg": "articulo actualizado",
+	"data": {
+		"_id": "68d539f46d971e266f967195",
+		"title": "mi primer blog chabales",
+		"content": "mi primer blog chabales. El dia hablaremos de como conseguir diamantes de manera sencilla en minecraft",
+		"status": "published",
+		"author": "68d539dc6d971e266f967184",
+		"tags": [],
+		"createdAt": "2025-09-25T12:47:48.357Z",
+		"updatedAt": "2025-09-25T12:51:37.138Z",
+		"id": "68d539f46d971e266f967195"
+	}
+}
+```
+`DELETE | /api/articles/68d539f46d971e266f967195` --> eliminar artículo articulo
+
+response: Al ser 204 (no content), manda una respuesta vacía.
+
+##### Para los controladores de `Comment`
+
+`POST | /api/comments` <-- Crear comentario
+
+body:
+```json
+{
+	"content": "Buen post. Ahora qur ya lo vi borralo",
+	"author": "68d539dc6d971e266f967184", <-- _id del usuario que hace el comentario
+	"article": "68d539f46d971e266f967195" <-- _id del articulo donde se postea el comentario
+}
+```
+response:
+```json
+{
+	"ok": true,
+	"msg": "comentario publicado",
+	"data": {
+		"content": "Buen post. Ahora qur ya lo vi borralo",
+		"author": "68d539dc6d971e266f967184",
+		"article": "68d539f46d971e266f967195",
+		"_id": "68d53e676d971e266f9671a1",
+		"createdAt": "2025-09-25T13:06:47.163Z",
+		"updatedAt": "2025-09-25T13:06:47.163Z"
+	}
+}
+```
+
+`GET | /api/comments/article/:articleId` <-- Traer todos los comentarios que pertenecen a un articulo
+ej. */api/comments/article/68d53e676d971e266f9671a1*
+
+response:
+```json
+{
+	"ok": true,
+	"data": [
+		{
+			"_id": "68d53e676d971e266f9671a1",
+			"content": "Buen post. Ahora qur ya lo vi borralo",
+			"author": {
+				"_id": "68d539dc6d971e266f967184",
+				"username": "hOLA1234",
+				"id": "68d539dc6d971e266f967184"
+			}
+		}
+	]
+}
+```
+
+
+`GET | /api/comments/my` <-- Traer todos los comentarios que pertenecen al usuario logueado
+
+response: 
+```json
+{
+	"ok": true,
+	"data": [
+		{
+			"_id": "68d53e676d971e266f9671a1",
+			"content": "Buen post. Ahora qur ya lo vi borralo"
+		}
+	]
+}
+```
+`PUT | /api/comments/:id` <-- Actualizar comentario
+ej. */api/comments/68d53e676d971e266f9671a1*
+
+body:
+```json
+{
+	"content": "mentira no borres el canal" <-- unicamente se puede pasar el content
+}
+```
+
+response:
+```json
+{
+	"ok": false,
+	"msg": "comentario actualizado",
+	"data": {
+		"acknowledged": true,
+		"modifiedCount": 1,
+		"upsertedId": null,
+		"upsertedCount": 0,
+		"matchedCount": 1
+	}
+}
+```
+`DELETE | /api/comments/:id` <-- Eliminar comentario
+
+response: Al ser 204 (no content), manda una respuesta vacía.
