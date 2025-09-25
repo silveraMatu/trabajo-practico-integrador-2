@@ -603,3 +603,118 @@ response:
 `DELETE | /api/comments/:id` <-- Eliminar comentario
 
 response: Al ser 204 (no content), manda una respuesta vacía.
+
+
+##### Para controladores de articleTag
+
+`POST | /api/articles/:articleId/tags/:tagId` <-- agregar etiqueta a un artículo
+ej. *http://localhost:3005/api/articles/68d541a3dc7fa261cfa89a77/tags/68d5419bdc7fa261cfa89a74*
+response:
+
+```json
+{
+	"ok": true,
+	"msg": "se agrego el tag",
+	"data": [
+		"68d5419bdc7fa261cfa89a74"
+	]
+}
+```
+
+`DELETE | /api/articles/:articleId/tags/:tagId` <-- quitar etiqueta a un artículo
+ej. *http://localhost:3005/api/articles/68d541a3dc7fa261cfa89a77/tags/68d5419bdc7fa261cfa89a74*
+
+response:
+```json
+{
+	"ok": true,
+	"msg": "se elimino el tag riBer del articulo",
+	"data": []
+}
+```
+
+### Validaciones personalizadas
+
+Se agregaron validaciones de regex coin Express-Validator para campos que solo aceptan ciertos caracteres o no incluyen espacios.
+```javascript
+// en el validator de tags
+
+.custom((value)=>{
+            const regex = /^\S+$/
+            if(!regex.test(value))
+                throw new Error("name no debe contener espacios.")
+            
+            return true
+        }),
+
+//validador de user
+
+ .custom((value)=>{
+            const regex = /.*(\W|\d).*/
+
+            if(regex.test(value))
+                throw new Error("firstName solo puede contener letras.");
+            
+            return true   
+        }),
+```
+
+Validación para que solo el autor o el admin pueda editar sus articles y comments
+
+```javascript
+   const models = {
+        articles: ArticleModel, 
+        comments: CommentModel 
+    }
+
+    const key = req.path.split("/")[1] //key tomara articles o comments dependiendo como se pase en el endpoint
+    const model = models[key]
+
+    let resource
+    
+    if(articleId){
+        resource = await model.findById(articleId) //por si en vez de id me mandan articleId
+
+    }else{
+        resource = await model.findById(id) //esto hace una query el modelo de article o comment dependiendo del endpoint
+    }
+
+    if(!resource)
+        return res.status(404).json({ok: false, msg: `${key.slice(0, -1)} no ha sido encontrado.}`})
+
+    if(!resource.author.equals(_id) && role !== "admin")
+        return res.status(403).json({ok: false, msg: "solo el autor o un admin puede realizar esta accion"})
+
+    req[key.slice(0, -1)] = resource //esto puede ser req.article o req.comment
+
+    next()
+}
+```
+
+Validación para comprobar existencia de tags antes de agregarlos al articulo
+
+```javascript
+ try {
+        const tagExist = await TagModel.findById(tagId)
+        if(!tagExist)
+            return res.status(404).json({ok: false, msg: "ese tag no ha sido encontrado"})
+        
+        if(article.tags.includes(tagId)) //Si el article ya tiene ese tag no se incluye
+            return res.status(400).json({ok: false, msg: "el articulo ya tiene ese tag"})
+
+        article.tags.push(tagId)
+```
+
+Validar que el articulo exista antes de crear un comentario
+
+```javascript
+
+//en controlador de comentario
+
+        const userExist = await UserModel.findById(validatedData.author)
+        const articleExist = await ArticleModel.findById(validatedData.article)
+        
+        if(!userExist || !articleExist)
+            return res.status(404).json({ok: false, msg: "el articulo o el usuario no exiten"})
+```
+
