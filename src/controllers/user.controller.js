@@ -67,9 +67,10 @@ export const updateUser = async(req, res)=>{
 
         })
 
-        const updatedUser = await user.save()
+        await user.save()
+        const {password, ...secureUser} = user._doc
 
-        res.status(200).json({ok: true, msg: "usuario actualizado", data: updatedUser})
+        res.status(200).json({ok: true, msg: "usuario actualizado", data: secureUser})
     } catch (e) {
         if(e.code == 11000)
             return res.status(400).json({ok: false, msg: `${Object.keys(e.keyValue)} ya se encuentra en uso`})
